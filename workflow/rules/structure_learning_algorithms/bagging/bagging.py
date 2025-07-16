@@ -15,17 +15,22 @@ def idtoalg(run_id: str):
     return None, None
 
 
+def split_ids(ids):
+    # this splits the input string ids into a list.
+    return [value.strip() for value in ids.split(",") if value.strip()]
+
+
 # Snakemake injects these for you:
 adjs = snakemake.input
+
 config = snakemake.params.configfile
 bagging = config["resources"]["structure_learning_algorithms"]["bagging"][0]
 out_csv_adj = snakemake.output["adjmat"]
 out_csv_avg = snakemake.output["avgmat"]
 
-ids = bagging["ids"]
+# go through the input string and split the ids to make the corect list
+ids = split_ids(bagging["ids"])
 bcategory = bagging["category"]
-
-print(f"Running bagging for {ids} with type {bcategory}")
 
 
 # 1. Load all adjacency matrices into a list of DataFrames
@@ -42,8 +47,15 @@ if bcategory == "standard":
     weights = [1/len(mats)]*len(mats)
     threshold = 0.5
 else:
-    threshold = bagging["threshold"]
-    weights_dict = bagging["weights"]
+    threshold = bagging["bagging_threshold"]
+    # make the weights dict:
+
+    weights_dict = dict()
+
+    # format will be alg,weight,alg,weight (always even length so skip by 2)
+    for i in range(0, len(ids), 2):
+        # must also convert the string number to float
+        weights_dict[ids[i]] = float(ids[i+1])
 
     weights = []
 

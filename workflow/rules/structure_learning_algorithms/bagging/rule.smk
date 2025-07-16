@@ -5,42 +5,67 @@ def alg_output_avgmat_path(algorithm):
         "seed={seed}/" \
         "avgmat.csv"
 
-def adjmats(bmark_setup, eval_method="graph_plots"):
-    ret = [[[[expand("{output_dir}/adjmat_estimate/"
-            "adjmat=/{adjmat_string}/"
-                     "parameters=/{param_string}/"
-                     "data=/{data_string}/"
-                     "algorithm=/{alg_string}/"
-                     "seed={seed}/"
-                     "adjmat.csv",
-                     output_dir="results",
-                     alg_string=json_string[alg_conf["id"]],
-                     **alg_conf,
-                     seed=seed,
-                     adjmat_string=gen_adjmat_string_from_conf(
-                         sim_setup["graph_id"], seed),
-                     param_string=gen_parameter_string_from_conf(
-                         sim_setup["parameters_id"], seed),
-                     data_string=gen_data_string_from_conf(sim_setup["data_id"], seed, seed_in_path=False))
-              for seed in get_seed_range(sim_setup["seed_range"])]
-             for sim_setup in bmark_setup["data"]]
-            for alg_conf in config["resources"]["structure_learning_algorithms"][alg]
-            if alg_conf["id"] in bmark_setup["evaluation"]["graph_estimation"]["ids"] and alg_conf["id"]!="bagging"]
-           for alg in active_algorithms(bmark_setup, eval_method)]
-    return ret
+def idtoalg(run_id: str):
+    """ Returns the algorithm name that the id belongs to, otherwise None """
+    for key, alg in config["resources"]["structure_learning_algorithms"].items():
+        for obj in alg:
+            if obj["id"] == run_id:
+
+                return key, obj
+    return None, None
+# look through all the ids and return list of this: 
+
+# pattern strings looks like: alg/alg_params=/ dict_to_path (algorithm)
+# dict_to_path looks like:     tmp = [key+"={"+key+"}" for key, val in c.items()] separated by '/'
 
 
+def unwrap_lists(d):
+    cleaned = {}
+    for k, v in d.items():
+        if isinstance(v,list):
+            cleaned[k] = v[0]
+        else:
+            cleaned[k] = v
+    return cleaned
+
+# pattern_strings[algorithm]
+def fill_in_pattern_strings(algorithm):
+    # idea: when running bagging, each algorithm only has one parameter, so fill them in early
+    alg = config["resources"]["structure_learning_algorithms"][algorithm][0] # this gets the dictionary of the SLA 
+    ps = pattern_strings[algorithm]
+    res_unformatted = ps.format(**alg)
+    res = res_unformatted.replace("[","").replace("]","") # replace list brackets 
+
+    print("the filled string is: ")
+    print(res)
+    return res
+
+
+def get_bagging_input(bmark_setup):
+    result = []
+    for algid in bmark_setup["evaluation"]["graph_estimation"]["ids"]:
+        if algid != "bagging":
+            algorithm = idtoalg(algid)[0]
+
+            filled = fill_in_pattern_strings(algorithm)
+
+            result.append("{output_dir}/adjmat_estimate/{data}/algorithm=/" + filled + "/seed={seed}/adjmat.csv")
+
+    return result
+
+
+# The idea behind getting the input is the fact that all but outputdir data and seed wildcards will all be the same, so they are filled in beforehand. I am not sure how the nest 
 
 rule:
     name:
         module_name
     input:
-        csv_adjmats = adjmats(bmark_setup,"graph_estimation"),
+        csv_adjmats = get_bagging_input(bmark_setup),
     output:
         adjmat=alg_output_adjmat_path(module_name),
         avgmat=alg_output_avgmat_path(module_name),
-        time=alg_output_time_path(module_name),
-        ntests=touch(alg_output_ntests_path(module_name))
+        time=touch(alg_output_time_path(module_name)),
+        ntests=touch(alg_output_ntests_path(module_name)),
     params:
         configfile = config
     script:

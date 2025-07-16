@@ -109,10 +109,6 @@ def get_active_rules(wildcards):
         evaluation = bmark_setup["evaluation"]
         bmark_setup_title = bmark_setup["title"]
 
-        if "bagging" in evaluation:
-            rules.append("results/evaluation/bagging/" +
-                         bmark_setup_title + "/bagging.done")
-
         # graph_estimation
         if "graph_estimation" in evaluation and evaluation["graph_estimation"]["ids"] != []:
             # Create a done key.done file for each graph_type.

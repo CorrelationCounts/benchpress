@@ -85,6 +85,11 @@ snakemake.utils.validate(config, tmp_schema)
 # remove the temporary schema file
 os.remove("workflow/"+tmp_schema)
 
+print("===================================")
+print("===================================")
+print("VALIDATION COMPLETE")
+print("===================================")
+print("===================================")
 
 include: "rules/docker_images.smk"
 

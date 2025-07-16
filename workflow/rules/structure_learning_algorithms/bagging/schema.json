@@ -9,28 +9,19 @@
         "properties": {
             "id": {
                 "type": "string",
-                "description": "Unique identifier"
+                "description": "Unique identifier",
+                "enum":["bagging"]
             },
             "category": {
                 "type": "string",
                 "description": "Type of bagging (standard or weighted)",
                 "enum": ["standard","weighted"]
             },"ids":{
-                "type": "array",
-                "items":{
-                    "type": "string"
-                }
+                "type": "string",
+                "description": "csv string of ids, if weighted bagging is used, id should be followed by its weight"
             },
-            "threshold":{
+            "bagging_threshold":{
                 "$ref": "../../../schemas/definitions.schema.json#/definitions/nonzeroprob"
-            },
-            "weights":{
-                "type": "object",
-                "minProperties": 1,
-                "patternProperties": {
-                    "^[^\\s]+$": {"$ref": "../../../schemas/definitions.schema.json#/definitions/nonnegnum"}
-                },
-                "additionalProperties": false
             },
             "edgeConstraints": {
                 "type": ["string", "null"],
@@ -44,16 +35,13 @@
             {
                 "id": "bagging",
                 "category": "standard",
-                "ids": ["id1","id2","id3"],
-                "edgeConstraints": "edgeConstraints.json"
+                "ids": "id1,id2,id3"
             },
             {
                 "id": "bagging",
                 "category": "weighted",
-                "threshold": 0.5,
-                "ids": ["id1","id2","id3"],
-                "weights": {"id1":0.5,"id2":0.25,"id3":0.25},
-                "edgeConstraints": "edgeConstraints.json"
+                "bagging_threshold": 0.5,
+                "ids": "id1,0.5,id2,0.25,id3,0.25"
             }
         ]
     }

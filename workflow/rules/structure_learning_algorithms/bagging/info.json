@@ -1,9 +1,14 @@
 {
     "title": "Bagging",
     "docs_url": "",
-    "outputs": [],
+    "outputs": ["adjmat"],
+    "graph_types": [
+        "all"
+    ],
     "data_missingness": [],
     "intervention_types": [],
-    "mcmc": true,
-    "edge_constraints": true
+    "mcmc": false,
+    "edge_constraints": false,
+    "language": "python",
+    "meta_description": "The Bagging module in Benchpress is designed to enhance the performance and robustness of causal discovery algorithms by aggregating their predictions. This ensemble technique helps reduce variance and leads to more stable and reliable causal graphs."
 }
