@@ -38,17 +38,6 @@ bcategory = bagging["category"]
 mats = [pd.read_csv(path, header=0).loc[:, lambda df: ~
                                         df.columns.str.contains('^Unnamed')] for path in adjs]
 
-# print("====================")
-# print("Here are the paths: ")
-# for path in adjs:
-#     print(path)
-# print("====================")
-# print("====================")
-# print("Here are the adjmats: ")
-# for mat in mats:
-#     print(mat)
-# print("====================")
-
 
 if len(mats) == 0:
     print("ERROR: No adjacency matrices found, try adding some algorithms to the config file or check the input paths")
