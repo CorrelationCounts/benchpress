@@ -17,16 +17,10 @@ def idtoalg(run_id: str):
 
 # pattern strings looks like: alg/alg_params=/ dict_to_path (algorithm)
 # dict_to_path looks like:     tmp = [key+"={"+key+"}" for key, val in c.items()] separated by '/'
+def split_ids(ids):
+    # this splits the input string ids into a list.
+    return [value.strip() for value in ids.split(",") if value.strip()]
 
-
-def unwrap_lists(d):
-    cleaned = {}
-    for k, v in d.items():
-        if isinstance(v,list):
-            cleaned[k] = v[0]
-        else:
-            cleaned[k] = v
-    return cleaned
 
 # pattern_strings[algorithm]
 def fill_in_pattern_strings(algorithm):
@@ -36,14 +30,18 @@ def fill_in_pattern_strings(algorithm):
     res_unformatted = ps.format(**alg)
     res = res_unformatted.replace("[","").replace("]","") # replace list brackets 
 
-    print("the filled string is: ")
-    print(res)
     return res
 
 
 def get_bagging_input(bmark_setup):
     result = []
-    for algid in bmark_setup["evaluation"]["graph_estimation"]["ids"]:
+
+    if "benchmarks" in bmark_setup["evaluation"] and bmark_setup["evaluation"]["benchmarks"]["ids"]: # if the ids list in the benchmarks section is not empty, we use those ids 
+        ids = bmark_setup["evaluation"]["benchmarks"]["ids"]
+    else:
+        ids = bmark_setup["evaluation"]["graph_estimation"]["ids"]
+
+    for algid in ids:
         if algid != "bagging":
             algorithm = idtoalg(algid)[0]
 
@@ -52,7 +50,6 @@ def get_bagging_input(bmark_setup):
             result.append("{output_dir}/adjmat_estimate/{data}/algorithm=/" + filled + "/seed={seed}/adjmat.csv")
 
     return result
-
 
 # The idea behind getting the input is the fact that all but outputdir data and seed wildcards will all be the same, so they are filled in beforehand. I am not sure how the nest 
 

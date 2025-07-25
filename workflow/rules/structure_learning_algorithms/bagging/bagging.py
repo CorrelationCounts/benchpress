@@ -38,16 +38,27 @@ bcategory = bagging["category"]
 mats = [pd.read_csv(path, header=0).loc[:, lambda df: ~
                                         df.columns.str.contains('^Unnamed')] for path in adjs]
 
+# print("====================")
+# print("Here are the paths: ")
+# for path in adjs:
+#     print(path)
+# print("====================")
+# print("====================")
+# print("Here are the adjmats: ")
+# for mat in mats:
+#     print(mat)
+# print("====================")
+
+
 if len(mats) == 0:
     print("ERROR: No adjacency matrices found, try adding some algorithms to the config file or check the input paths")
     exit(1)
 
+threshold = bagging["bagging_threshold"]
 
 if bcategory == "standard":
     weights = [1/len(mats)]*len(mats)
-    threshold = 0.5
 else:
-    threshold = bagging["bagging_threshold"]
     # make the weights dict:
 
     weights_dict = dict()
