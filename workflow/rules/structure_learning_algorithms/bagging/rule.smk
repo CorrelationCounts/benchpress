@@ -19,7 +19,7 @@ def idtoalg(run_id: str):
 # dict_to_path looks like:     tmp = [key+"={"+key+"}" for key, val in c.items()] separated by '/'
 def split_ids(ids):
     # this splits the input string ids into a list.
-    return [value.strip() for value in ids.split(",") if value.strip()]
+    return [value.strip() for value in ids.split(":") if value.strip()]
 
 
 # pattern_strings[algorithm]
@@ -61,8 +61,8 @@ rule:
     output:
         adjmat=alg_output_adjmat_path(module_name),
         avgmat=alg_output_avgmat_path(module_name),
-        time=touch(alg_output_time_path(module_name)),
-        ntests=touch(alg_output_ntests_path(module_name)),
+        time=alg_output_time_path(module_name),
+        ntests=alg_output_ntests_path(module_name),
     params:
         configfile = config
     script:
