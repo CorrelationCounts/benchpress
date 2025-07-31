@@ -35,13 +35,13 @@
             {
                 "id": "bagging",
                 "category": "standard",
-                "ids": "id1,id2,id3"
+                "ids": "id1:id2:id3"
             },
             {
                 "id": "bagging",
                 "category": "weighted",
                 "bagging_threshold": 0.5,
-                "ids": "id1,0.5,id2,0.25,id3,0.25"
+                "ids": "id1:0.5:id2:0.25:id3:0.25"
             }
         ]
     }

@@ -99,6 +99,5 @@ def alg():
         text_file.write("None")
 
 
-# Use timeout if not None
 start = time.perf_counter()
 alg()
