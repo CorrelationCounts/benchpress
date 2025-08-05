@@ -26,17 +26,15 @@ def split_ids(ids):
 
 
 def alg():
+    adjs = snakemake.input # list of paths to the adjacency matrices
 
-    # Snakemake injects these for you:
-    adjs = snakemake.input
-    config = snakemake.params.configfile
-    bagging = config["resources"]["structure_learning_algorithms"]["bagging"][0]
     out_csv_adj = snakemake.output["adjmat"]
     out_csv_avg = snakemake.output["avgmat"]
 
     # go through the input string and split the ids to make the corect list
-    ids = split_ids(bagging["ids"])
-    bcategory = bagging["category"]
+    ids = split_ids(snakemake.wildcards["ids"])
+    bcategory = snakemake.wildcards["category"]
+    threshold = float(snakemake.wildcards["bagging_threshold"])
 
     # 1. Load all adjacency matrices into a list of DataFrames
     # mats = [pd.read_csv(path, index_col=0) for path in adjs]
@@ -47,7 +45,7 @@ def alg():
         print("ERROR: No adjacency matrices found, try adding some algorithms to the config file or check the input paths")
         exit(1)
 
-    threshold = bagging["bagging_threshold"]
+    
 
     if bcategory == "standard":
         weights = [1/len(mats)]*len(mats)
@@ -93,6 +91,7 @@ def alg():
     # These are the adjmat and avgmats
     pd.DataFrame(avg_df).to_csv(out_csv_avg, index=False)
     pd.DataFrame(bin_mat).to_csv(out_csv_adj, index=False)
+
 
     # ntests output (not applicable here)
     with open(snakemake.output["ntests"], "w") as text_file:

@@ -21,7 +21,10 @@
                 "description": "csv string of ids, if weighted bagging is used, id should be followed by its weight"
             },
             "bagging_threshold":{
-                "$ref": "../../../schemas/definitions.schema.json#/definitions/nonzeroprob"
+                "oneOf":[
+                {"$ref": "../../../schemas/definitions.schema.json#/definitions/nonzeroprob"},
+                {"type": "array", "items": {"$ref": "../../../schemas/definitions.schema.json#/definitions/nonzeroprob"}, "minItems": 1}
+            ]
             },
             "edgeConstraints": {
                 "type": ["string", "null"],
