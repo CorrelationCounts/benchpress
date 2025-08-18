@@ -30,6 +30,30 @@ def fill_in_pattern_strings(algorithm):
 
     return res
 
+def fill_in_mcmc_strings(algorithm):
+    # pattern_strings["mcmc_est"] = "mcmc_params/"\
+    #                         "mcmc_estimator={mcmc_estimator}/"\
+    #                         "threshold={threshold}/"\
+    #                         "burnin_frac={burnin_frac}"
+    # need to fill in the above parameters and return 
+    alg = config["resources"]["structure_learning_algorithms"][algorithm][0]
+    if isinstance(alg["mcmc_estimator"],list):
+        mcmc_estimator = alg["mcmc_estimator"][0]
+    else:
+        mcmc_estimator = alg["mcmc_estimator"]
+
+    if isinstance(alg["threshold"],list):
+        threshold = str(alg["threshold"][0])
+    else:
+        threshold = str(alg["threshold"])
+
+    if isinstance(alg["burnin_frac"],list):
+        burnin_frac = str(alg["burnin_frac"][0])
+    else:
+        burnin_frac = str(alg["burnin_frac"])
+
+    return ("mcmc_params/mcmc_estimator=" + mcmc_estimator + "/threshold=" + threshold + "/burnin_frac=" + burnin_frac)
+
 
 def get_bagging_input(bmark_setup):
     result = []
@@ -45,6 +69,13 @@ def get_bagging_input(bmark_setup):
 
             filled = fill_in_pattern_strings(algorithm)
 
+            # mcmc has different path 
+            # if "mcmc_estimator" in config["resources"]["structure_learning_algorithms"][algorithm][0]:
+            #     filled_mcmc = fill_in_mcmc_strings(algorithm)
+            #     # need to fill in bn and adjmat wildcards
+            #     # result.append("{output_dir}/adjmat_estimate/adjmat=/{adjmat}/parameters=/{bn}/data=/{data}/algorithm=/" + filled + "/" + filled_mcmc + "/seed={seed}/adjmat.csv")
+            #     result.append("{output_dir}/adjmat_estimate/{data}/algorithm=/" + filled + "/" + filled_mcmc + "/seed={seed}/adjmat.csv")
+            # else:
             result.append("{output_dir}/adjmat_estimate/{data}/algorithm=/" + filled + "/seed={seed}/adjmat.csv") # this is the path to the csv file with just the wildcards needed 
 
     return result

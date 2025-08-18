@@ -12,6 +12,7 @@ import sys
 
 def idtoalg(run_id: str):
     """ Returns the algorithm name that the id belongs to, otherwise None """
+    config = snakemake.params.configfile
     for key, alg in config["resources"]["structure_learning_algorithms"].items():
         for obj in alg:
             if obj["id"] == run_id:
@@ -26,15 +27,17 @@ def split_ids(ids):
 
 
 def alg():
+    
     adjs = snakemake.input # list of paths to the adjacency matrices
-
     out_csv_adj = snakemake.output["adjmat"]
     out_csv_avg = snakemake.output["avgmat"]
-
     # go through the input string and split the ids to make the corect list
     ids = split_ids(snakemake.wildcards["ids"])
     bcategory = snakemake.wildcards["category"]
-    threshold = float(snakemake.wildcards["bagging_threshold"])
+    if "bagging_threshold" in snakemake.wildcards:
+        threshold = float(snakemake.wildcards["bagging_threshold"])
+    else:
+        threshold = 0.5
 
     # 1. Load all adjacency matrices into a list of DataFrames
     # mats = [pd.read_csv(path, index_col=0) for path in adjs]
@@ -51,7 +54,6 @@ def alg():
         weights = [1/len(mats)]*len(mats)
     else:
         # make the weights dict:
-
         weights_dict = dict()
 
         # format will be alg,weight,alg,weight (always even length so skip by 2)

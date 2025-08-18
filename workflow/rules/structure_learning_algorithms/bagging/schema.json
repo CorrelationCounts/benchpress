@@ -26,6 +26,9 @@
                 {"type": "array", "items": {"$ref": "../../../schemas/definitions.schema.json#/definitions/nonzeroprob"}, "minItems": 1}
             ]
             },
+            "timeout": {
+                "$ref": "../../../schemas/definitions.schema.json#/definitions/flexnonnegnumnull"
+            },
             "edgeConstraints": {
                 "type": ["string", "null"],
                 "pattern": ".*\\.json$",
@@ -33,7 +36,7 @@
             }
         },
         "additionalProperties": false,
-        "required": ["category","ids"],
+        "required": ["id","category","ids"],
         "examples": [
             {
                 "id": "bagging",
@@ -42,8 +45,17 @@
             },
             {
                 "id": "bagging",
+                "category": "standard",
+                "bagging_threshold": 0.6,
+                "ids": "id1:id2:id3"
+            },{
+                "id": "bagging",
                 "category": "weighted",
-                "bagging_threshold": 0.5,
+                "ids": "id1:0.5:id2:0.25:id3:0.25"
+            },{
+                "id": "bagging",
+                "category": "weighted",
+                "bagging_threshold": 0.55,
                 "ids": "id1:0.5:id2:0.25:id3:0.25"
             }
         ]
