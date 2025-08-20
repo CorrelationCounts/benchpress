@@ -12,6 +12,7 @@ Algorithms
     :name: Structure learning algorithms
     :caption: Structure learning algorithms
     
+    structure_learning_algorithms/bagging
     structure_learning_algorithms/gcastle_anm
     structure_learning_algorithms/rblip_asobs
     structure_learning_algorithms/bdgraph
@@ -107,6 +108,14 @@ Modules for MCMC algorithms can be used seamlessly with the other modules. Howev
      - Edge constraints
      - Data missingness
      - Intervention type
+   * - :ref:`Bagging <Bagging>`
+     -
+     - `UG <https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)#Graph>`
+     - C, D, M
+     -
+     - :ref:`Yes <edge_constraints>`
+     -
+     -
    * - :ref:`ANM <gcastle_anm>`
      - `gCastle <https://github.com/huawei-noah/trustworthyAI/tree/master/gcastle>`__
      - `DAG <https://en.wikipedia.org/wiki/Directed_acyclic_graph>`__
