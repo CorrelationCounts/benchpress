@@ -70,14 +70,16 @@ def get_bagging_input(bmark_setup):
             filled = fill_in_pattern_strings(algorithm)
 
             # mcmc has different path 
-            # if "mcmc_estimator" in config["resources"]["structure_learning_algorithms"][algorithm][0]:
-            #     filled_mcmc = fill_in_mcmc_strings(algorithm)
-            #     # need to fill in bn and adjmat wildcards
-            #     # result.append("{output_dir}/adjmat_estimate/adjmat=/{adjmat}/parameters=/{bn}/data=/{data}/algorithm=/" + filled + "/" + filled_mcmc + "/seed={seed}/adjmat.csv")
-            #     result.append("{output_dir}/adjmat_estimate/{data}/algorithm=/" + filled + "/" + filled_mcmc + "/seed={seed}/adjmat.csv")
-            # else:
-            result.append("{output_dir}/adjmat_estimate/{data}/algorithm=/" + filled + "/seed={seed}/adjmat.csv") # this is the path to the csv file with just the wildcards needed 
+            if "mcmc_estimator" in config["resources"]["structure_learning_algorithms"][algorithm][0]:
+                filled_mcmc = fill_in_mcmc_strings(algorithm)
+                # need to fill in bn and adjmat wildcards
+                # result.append("{output_dir}/adjmat_estimate/adjmat=/{adjmat}/parameters=/{bn}/data=/{data}/algorithm=/" + filled + "/" + filled_mcmc + "/seed={seed}/adjmat.csv")
+                result.append("{output_dir}/adjmat_estimate/{data}/algorithm=/" + filled + "/" + filled_mcmc + "/seed={seed}/adjmat.csv")
+            else:
+                result.append("{output_dir}/adjmat_estimate/{data}/algorithm=/" + filled + "/seed={seed}/adjmat.csv") # this is the path to the csv file with just the wildcards needed 
 
+           
+    print(result)
     return result
 
 # The idea behind getting the input is the fact that all but the outputdir, data, and seed wildcards will be the same, so they are filled in beforehand.
