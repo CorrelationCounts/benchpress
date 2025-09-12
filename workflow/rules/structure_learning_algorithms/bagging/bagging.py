@@ -7,9 +7,6 @@ import pandas as pd
 import numpy as np
 import sys
 
-
-
-
 def idtoalg(run_id: str):
     """ Returns the algorithm name that the id belongs to, otherwise None """
     config = snakemake.params.configfile
@@ -41,8 +38,12 @@ def alg():
 
     # 1. Load all adjacency matrices into a list of DataFrames
     # mats = [pd.read_csv(path, index_col=0) for path in adjs]
+
+    header = pd.read_csv(adjs[0], header=0).columns
+    header = header[~header.str.contains("^Unnamed")] # this is the header we will save (first matrix for simplicity)
+    
     mats = [pd.read_csv(path, header=0).loc[:, lambda df: ~
-                                            df.columns.str.contains('^Unnamed')] for path in adjs]
+                                            df.columns.str.contains('^Unnamed')].to_numpy() for path in adjs] # This drops indexing columns that might exist in excess
 
     if len(mats) == 0:
         print("ERROR: No adjacency matrices found, try adding some algorithms to the config file or check the input paths")
@@ -80,10 +81,17 @@ def alg():
     weights = weights / np.sum(weights)
 
     # Compute weighted average adjacency
-    avg_df = sum(w * df for w, df in zip(weights, mats))
+
+    # Apply to all dataframes in the list
+
+    avg_mat = sum(w * df for w, df in zip(weights, mats))
+
+    avg_df = pd.DataFrame(avg_mat,columns=header)
 
     # Threshold to binary edges
-    bin_mat = (avg_df >= threshold).astype(int)
+    bin_mat = (avg_mat >= threshold).astype(int)
+
+    bin_df = pd.DataFrame(bin_mat,columns=header)
 
     # This is the time output
     tottime = time.perf_counter() - start
@@ -91,8 +99,8 @@ def alg():
         text_file.write(str(tottime))
 
     # These are the adjmat and avgmats
-    pd.DataFrame(avg_df).to_csv(out_csv_avg, index=False)
-    pd.DataFrame(bin_mat).to_csv(out_csv_adj, index=False)
+    avg_df.to_csv(out_csv_avg, index=False)
+    bin_df.to_csv(out_csv_adj, index=False)
 
 
     # ntests output (not applicable here)

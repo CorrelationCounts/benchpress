@@ -79,7 +79,6 @@ def get_bagging_input(bmark_setup):
                 result.append("{output_dir}/adjmat_estimate/{data}/algorithm=/" + filled + "/seed={seed}/adjmat.csv") # this is the path to the csv file with just the wildcards needed 
 
            
-    print(result)
     return result
 
 # The idea behind getting the input is the fact that all but the outputdir, data, and seed wildcards will be the same, so they are filled in beforehand.
