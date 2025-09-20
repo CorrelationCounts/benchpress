@@ -28,7 +28,7 @@ myalg <- function() {
         lambda <- as.numeric(snakemake@wildcards[["nlambda"]])
 
     ## "ric" and "stars" and "ebic" are available
-    select_criterion = 'stars'
+    select_criterion = 'ric'
     if (snakemake@wildcards[["select_criterion"]]!="None")
         select_criterion <-snakemake@wildcards[["select_criterion"]]
     
@@ -45,7 +45,7 @@ myalg <- function() {
                              verbose = FALSE)
     
     ## transform to an adjmat
-    adjmat <- as.matrix(out.select$path[out.select$opt.index][[1]])
+    adjmat <- abs(as.matrix(out.select$refit))
         
     # Format and save the results
     totaltime <- proc.time()[1] - start
