@@ -1,0 +1,231 @@
+{
+    "benchmark_setup": [
+      {
+      "title": "ComputeCanadaDryRun",
+      "data": [
+        {
+          "data_id": "example1",
+          "graph_id": "random-1-ultra-sparse",
+          "parameters_id": "gwi",
+          "seed_range": [1,2]
+        },
+        {
+          "data_id": "example1",
+          "graph_id": "random-1-sparse",
+          "parameters_id": "gwi",
+          "seed_range": [1,2]
+        },
+        {
+          "data_id": "example1",
+          "graph_id": "lattice",
+          "parameters_id": "gwi",
+          "seed_range": [1,2]
+        },
+        {
+          "data_id": "example1",
+          "graph_id": "ar5",
+          "parameters_id": "gwi",
+          "seed_range": [1,2]
+        },
+        {
+          "data_id": "example1",
+          "graph_id": "circle",
+          "parameters_id": "gwi",
+          "seed_range": [1,2]
+        }
+      ],
+      "evaluation": {
+        "benchmarks": {
+          "filename_prefix": "dualGraph_p200_sparse_gwi/",
+          "show_seed": false,
+          "errorbar": true,
+          "errorbarh": false,
+          "scatter": true,
+          "path": true,
+          "text": false,
+          "ids": [
+            "ct",
+            "mb",
+            "glasso",
+            "bdgraph",
+            "jtsampler_gts",
+            "psi-learn",
+            "bagging"
+          ]
+        },
+        "graph_true_plots": true,
+        "graph_true_stats": false,
+        "ggally_ggpairs": false,
+        "graph_plots": [],
+        "mcmc_traj_plots": [
+          {
+            "id": "jtsampler_gts",
+            "burn_in": 0.0,
+            "thinning": 100,
+            "functional": [
+              "score",
+              "size"
+            ],
+            "active": false
+          }
+        ],
+        "mcmc_heatmaps": [],
+        "mcmc_autocorr_plots": []
+      }
+    }],
+    "resources": {
+      "data": {
+        "iid": [
+          {
+            "id": "example1",
+            "standardized": false,
+            "n": [
+              25,50
+            ]
+          }
+        ]
+      },
+      "graph": {
+        "trilearn_rand_bandmat": [
+          {
+            "id": "ar5",
+            "max_bandwidth": 5,
+            "dim": 100
+          }
+        ],
+        "bdgraph_graphsim": [
+          {
+            "id": "random-1-sparse",
+            "p": 100,
+            "graph": "random",
+            "class": null,
+            "size": null,
+            "prob": 0.1
+          },
+          {
+            "id": "random-1-ultra-sparse",
+            "p": 100,
+            "graph": "random",
+            "class": null,
+            "size": null,
+            "prob": 0.01
+          },
+          {
+            "id": "lattice",
+            "p": 100,
+            "graph": "lattice",
+            "class": null,
+            "size": null,
+            "prob": 0.1
+          },
+          {
+            "id": "circle",
+            "p": 100,
+            "graph": "circle",
+            "class": null,
+            "size": null,
+            "prob": 0.2
+          }
+        ]
+      },
+      "parameters": {
+        "trilearn_intra-class": [
+          {
+            "id": "intra-class",
+            "rho": 0.5,
+            "sigma2": 1.0
+          }
+        ],
+        "bdgraph_rgwish": [
+          {
+            "id": "gwi",
+            "b": 5,
+            "threshold_conv": 0.000001
+          }
+        ]
+      },
+      "structure_learning_algorithms": {
+        "bagging":[{
+            "id": "bagging",
+            "category": "standard",
+            "bagging_threshold": [0.45,0.5,0.55],
+            "ids": "ct:mb:glasso:bdgraph:jtsampler_gts:psi-learn"
+        }],
+        "equsa_psilearner": [
+          {
+            "id": "psi-learn",
+            "timeout": null,
+            "alpha1": 0.3,
+            "alpha2": [
+              0.2
+            ]
+          }
+        ],
+        "bdgraph": [
+          {
+            "id": "bdgraph",
+            "method": "ggm",
+            "algo": "rjmcmc", 
+            "iter": 1000,
+            "gprior": 0.5,
+            "dfprior": 3,
+            "gstart": "empty",
+            "timeout": null,
+            "mcmc_seed": [1],
+            "thresh": 0.5,
+            "mcmc_estimator": ["threshold"],
+            "threshold": [
+              0.2
+            ],
+            "burnin_frac": 0.5
+          }
+        ],
+        "athomas_jtsamplers": [
+          {
+            "id": "jtsampler_gts",
+            "burnin_frac": 0.5,
+            "mcmc_estimator": "threshold",
+            "timeout": null,
+            "mcmc_seed": 1,
+            "num_samples": 10000,
+            "sampler": 1,
+            "delta": 5,
+            "edge_penalty": 0,
+            "size_maxclique": 500,
+            "full_output": true,
+            "threshold": [
+              0.20
+            ]
+          }
+        ],
+        "huge_glasso": [
+          {
+            "id": "glasso",
+            "nlambda": 10,
+            "timeout": null
+          }
+        ],
+        "huge_mb": [
+          {
+            "id": "mb",
+            "nlambda": 10,
+            "timeout": null
+          }
+        ],
+        "huge_tiger":[
+          {
+            "id": "huge_tiger",
+            "timeout": null
+          }
+        ],
+        "corr_thresh":[
+          {
+            "id": "ct",
+            "timeout":null,
+            "thresh":0.5,
+            "method": "corr"
+          }
+        ]
+      }
+    }
+  }
