@@ -14,6 +14,11 @@ else:
     adjmat_true = pd.read_csv(snakemake.input["adjmat_true"])
     adjmat_est = pd.read_csv(snakemake.input["adjmat_est"])
 
+    # check if the adjacency matrices have the same columns
+    if not adjmat_true.columns.equals(adjmat_est.columns):
+        # make them have the same columns:
+        adjmat_est = adjmat_est.reindex(columns=adjmat_true.columns)
+
     adjmat_diff = 2*adjmat_true - adjmat_est
     adjmat_diff = adjmat_diff.replace([1], 3)
     adjmat_diff = adjmat_diff.replace([2], 1)

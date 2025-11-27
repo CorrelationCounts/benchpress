@@ -123,7 +123,7 @@ if (file.info(snakemake@input[["adjmat_est"]])$size > 0) {
   estimated_adjmat <- as.matrix(read.csv(snakemake@input[["adjmat_est"]],
     check.names = FALSE
   ))
-
+  colnames(estimated_adjmat) <- colnames(true_adjmat) # this prevents column name conflicts
   silent <- benchmarks(true_adjmat, estimated_adjmat)
 } else {
     print("Empty file. Writing empty file.")
