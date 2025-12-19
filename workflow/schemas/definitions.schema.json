@@ -81,6 +81,14 @@
             "minimum": 0,
             "maximum": 1
         },
+        "nonzeroprob":{
+            "title": "prob type",
+            "description": "Number in the range (0,1].",
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "exclusiveMinimum": true
+        },
         "problist": {
             "title": "problist type",
             "type": "array",
@@ -106,6 +114,12 @@
             "description": "Non-negative number",
             "type": "number",
             "minimum": 0
+        },
+        "posnum":{
+            "title": "posnum type",
+            "description": "Positive number",
+            "type": "number",
+            "exclusiveMinimum": 0
         },
         "nonnegnumlist": {
             "title": "nonnegnumlist",
